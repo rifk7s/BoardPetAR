@@ -120,3 +120,9 @@ InitTestScene*.unity*
 # Each machine re-enters the key in Vuforia Configuration after cloning.
 /[Aa]ssets/Resources/VuforiaConfiguration.asset
 /[Aa]ssets/Resources/VuforiaConfiguration.asset.meta
+
+# Raw downloads (Kenney zips, marker source), only the picked files go into Assets
+/_RawAssets/
+
+# Vuforia editor runtime cache (device and license derived data), regenerated on Play
+/QCAR/
