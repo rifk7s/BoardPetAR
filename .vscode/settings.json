@@ -67,5 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "BoardPetAR.slnx"
+    "dotnet.defaultSolution": "BoardPetAR.slnx",
+    "yaml.validate": false
 }
