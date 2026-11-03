@@ -792,7 +792,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CaveIntro
   cave: {fileID: 1333760026}
   pet: {fileID: 2020720693911400688}
-  petWander: {fileID: 2020720693911400689}
+  petStateMachine: {fileID: 2020720693911400691}
   audioSource: {fileID: 869108645}
   caveAppearSound: {fileID: 8300000, guid: 9f170a717a7bc4c3b8d35dba9db1d061, type: 3}
   petHopOutSound: {fileID: 8300000, guid: 8751ad5b8b35d4546abd047d67576094, type: 3}
@@ -1605,6 +1605,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8037886571724749078, guid: bfdec5268389446129cc8a3a43fa92d2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2020720693911400689}
+    - targetCorrespondingSourceObject: {fileID: 8037886571724749078, guid: bfdec5268389446129cc8a3a43fa92d2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2020720693911400691}
   m_SourcePrefab: {fileID: 100100000, guid: bfdec5268389446129cc8a3a43fa92d2, type: 3}
 --- !u!4 &2020720693911400688 stripped
 Transform:
@@ -1634,6 +1637,19 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 3614054279142488534, guid: bfdec5268389446129cc8a3a43fa92d2, type: 3}
   m_PrefabInstance: {fileID: 2020720693911400687}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2020720693911400691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409696766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2f0950df3c524488ae86eba1343e5ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PetStateMachine
+  petWander: {fileID: 2020720693911400689}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

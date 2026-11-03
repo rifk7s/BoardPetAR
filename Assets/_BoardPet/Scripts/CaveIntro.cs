@@ -9,7 +9,7 @@ public class CaveIntro : MonoBehaviour
     [Header("Objects")]
     [SerializeField] private Transform cave;
     [SerializeField] private Transform pet;
-    [SerializeField] private PetWander petWander;
+    [SerializeField] private PetStateMachine petStateMachine;
 
     [Header("Sounds")]
     [SerializeField] private AudioSource audioSource;
@@ -62,7 +62,8 @@ public class CaveIntro : MonoBehaviour
         PlaySound(petHopOutSound);
         yield return HopPetOutOfCave();
 
-        petWander.StartWandering();
+        // The intro is over: let the state machine take over the pet.
+        petStateMachine.RequestState(PetState.Wandering);
     }
 
     private IEnumerator ScaleOverTime(Transform target, Vector3 from, Vector3 to, float seconds)
