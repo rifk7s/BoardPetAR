@@ -36,6 +36,9 @@ public class PetWander : MonoBehaviour
         }
 
         StopFacingViewer();
+
+        // Stand still while turning, so nothing left over from eating or dancing keeps playing.
+        PlayAnimation("Idle");
         wanderRoutine = StartCoroutine(WanderForever());
     }
 

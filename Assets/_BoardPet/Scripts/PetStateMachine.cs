@@ -9,6 +9,7 @@ public class PetStateMachine : MonoBehaviour
     [SerializeField] private PetWander petWander;
     [SerializeField] private Animator animator;
     [SerializeField] private PetEmote petEmote;
+    [SerializeField] private PetActions petActions;
 
     [Header("Icons")]
     [SerializeField] private Sprite hungryAlertIcon;
@@ -16,7 +17,7 @@ public class PetStateMachine : MonoBehaviour
 
     public PetState CurrentState { get; private set; } = PetState.Intro;
 
-    // Raised after every successful state change. The buttons will listen to this in stage C.
+    // Raised after every successful state change. PetButtons listens to this.
     public event Action<PetState> StateChanged;
 
     public bool RequestState(PetState newState)
@@ -62,6 +63,9 @@ public class PetStateMachine : MonoBehaviour
                 return to == PetState.Wandering;
 
             case PetState.Sleeping:
+                return to == PetState.WakingUp;
+
+            case PetState.WakingUp:
                 return to == PetState.Wandering;
 
             default:
@@ -85,7 +89,25 @@ public class PetStateMachine : MonoBehaviour
                 petEmote.ShowAlertWithItem(hungryAlertIcon, hungryIcon);
                 break;
 
-            // Eating, Playing and Sleeping are added in stage C.
+            case PetState.Eating:
+                // Ends by itself and requests Wandering when the meal is finished.
+                petActions.StartEating();
+                break;
+
+            case PetState.Playing:
+                // Ends by itself and requests Wandering when the dance is finished.
+                petActions.StartPlaying();
+                break;
+
+            case PetState.Sleeping:
+                // Stays asleep until the Wake button requests WakingUp.
+                petActions.StartSleeping();
+                break;
+
+            case PetState.WakingUp:
+                // Stands up smoothly, then requests Wandering by itself.
+                petActions.StartWakingUp();
+                break;
         }
     }
 

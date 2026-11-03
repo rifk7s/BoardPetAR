@@ -10,7 +10,7 @@ public class PetHunger : MonoBehaviour
     [SerializeField] private PetStateMachine petStateMachine;
 
     [Tooltip("Seconds after eating before the pet becomes hungry. Kept short for the demo.")]
-    [SerializeField] private float hungerDurationSeconds = 150f;
+    [SerializeField] private float hungerDurationSeconds = 40f;
 
     private const string LastFeedTimeKey = "BoardPet.LastFeedUtcTicks";
 
