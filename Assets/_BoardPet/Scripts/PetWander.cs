@@ -22,8 +22,10 @@ public class PetWander : MonoBehaviour
     // facing the viewer, and never shows its back to the camera.
     private const float FaceRightYaw = 90f;
     private const float FaceLeftYaw = 270f;
+    private const float FaceViewerYaw = 180f;
 
     private Coroutine wanderRoutine;
+    private Coroutine faceViewerRoutine;
     private bool isFacingRight = true;
 
     public void StartWandering()
@@ -33,7 +35,25 @@ public class PetWander : MonoBehaviour
             return;
         }
 
+        StopFacingViewer();
         wanderRoutine = StartCoroutine(WanderForever());
+    }
+
+    // Turns the pet in place so its face points at the camera (used when it stops, e.g. hungry).
+    // This only rotates the pet; the state machine decides which animation plays.
+    public void FaceViewer()
+    {
+        StopFacingViewer();
+        faceViewerRoutine = StartCoroutine(TurnToYaw(FaceViewerYaw));
+    }
+
+    private void StopFacingViewer()
+    {
+        if (faceViewerRoutine != null)
+        {
+            StopCoroutine(faceViewerRoutine);
+            faceViewerRoutine = null;
+        }
     }
 
     public void StopWandering()
@@ -65,8 +85,15 @@ public class PetWander : MonoBehaviour
 
     private IEnumerator TurnToFaceWalkDirection()
     {
-        float startYaw = transform.localEulerAngles.y;
         float targetYaw = isFacingRight ? FaceRightYaw : FaceLeftYaw;
+        yield return TurnToYaw(targetYaw);
+    }
+
+    // The pet's yaw always stays between 90 and 270, so a plain Lerp always turns
+    // through 180 (facing the viewer) and never through its back.
+    private IEnumerator TurnToYaw(float targetYaw)
+    {
+        float startYaw = transform.localEulerAngles.y;
 
         float elapsed = 0f;
         while (elapsed < turnSeconds)

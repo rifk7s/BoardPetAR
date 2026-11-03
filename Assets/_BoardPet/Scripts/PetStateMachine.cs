@@ -7,6 +7,12 @@ using UnityEngine;
 public class PetStateMachine : MonoBehaviour
 {
     [SerializeField] private PetWander petWander;
+    [SerializeField] private Animator animator;
+    [SerializeField] private PetEmote petEmote;
+
+    [Header("Icons")]
+    [SerializeField] private Sprite hungryAlertIcon;
+    [SerializeField] private Sprite hungryIcon;
 
     public PetState CurrentState { get; private set; } = PetState.Intro;
 
@@ -71,7 +77,15 @@ public class PetStateMachine : MonoBehaviour
                 petWander.StartWandering();
                 break;
 
-            // Hungry, Eating, Playing and Sleeping are added in stages B and C.
+            case PetState.Hungry:
+                // Stop, turn to the camera, shake the head now and then,
+                // and show one bubble with an alert on top and a fish below.
+                petWander.FaceViewer();
+                animator.CrossFade("Hungry", 0.15f);
+                petEmote.ShowAlertWithItem(hungryAlertIcon, hungryIcon);
+                break;
+
+            // Eating, Playing and Sleeping are added in stage C.
         }
     }
 
@@ -81,6 +95,10 @@ public class PetStateMachine : MonoBehaviour
         {
             case PetState.Wandering:
                 petWander.StopWandering();
+                break;
+
+            case PetState.Hungry:
+                petEmote.Hide();
                 break;
         }
     }
