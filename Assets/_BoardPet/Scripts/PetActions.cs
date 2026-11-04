@@ -32,6 +32,9 @@ public class PetActions : MonoBehaviour
     [SerializeField] private AudioClip playSoundFirst;
     [SerializeField] private AudioClip playSoundSecond;
     [SerializeField] private float playSeconds = 2.5f;
+    [Tooltip("The happy hop at the start of Play: how high (meters) and how long (seconds).")]
+    [SerializeField] private float hopHeightMeters = 0.02f;
+    [SerializeField] private float hopSeconds = 0.4f;
 
     [Header("Sleep")]
     [SerializeField] private Sprite sleepEmote;
@@ -120,7 +123,10 @@ public class PetActions : MonoBehaviour
 
         PlaySound(playSoundFirst);
         petEmote.Show(starEmote);
-        yield return new WaitForSeconds(halfTime);
+
+        // One happy hop at the start of the dance, then keep dancing for the rest of the first half.
+        yield return HappyHop();
+        yield return new WaitForSeconds(halfTime - hopSeconds);
 
         PlaySound(playSoundSecond);
         petEmote.Show(happyEmote);
@@ -131,6 +137,24 @@ public class PetActions : MonoBehaviour
 
         actionRoutine = null;
         petStateMachine.RequestState(PetState.Wandering);
+    }
+
+    // A short jump straight up and back down onto the ledge.
+    private IEnumerator HappyHop()
+    {
+        Vector3 groundPosition = transform.localPosition;
+        float elapsed = 0f;
+
+        while (elapsed < hopSeconds)
+        {
+            elapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsed / hopSeconds);
+            float height = Mathf.Sin(progress * Mathf.PI) * hopHeightMeters;
+            transform.localPosition = groundPosition + Vector3.up * height;
+            yield return null;
+        }
+
+        transform.localPosition = groundPosition;
     }
 
     // ---------- Sleep ----------

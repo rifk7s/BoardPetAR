@@ -1,7 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-// Plays the intro: the cave grows out of the ledge, then the pet hops out of it.
+// Plays the intro, one step after another so each step can be seen:
+//   1. the cave grows out of the ledge (rock thud)
+//   2. a glowing portal opens inside the cave arch and glows for a moment
+//   3. the pet hops out through the portal in a puff of smoke
+//   4. the portal closes behind it
 // It is hooked to the image target's OnTargetFound event, and it only plays
 // once per app session (losing and finding the marker again does nothing).
 public class CaveIntro : MonoBehaviour
@@ -11,6 +15,12 @@ public class CaveIntro : MonoBehaviour
     [SerializeField] private Transform pet;
     [SerializeField] private PetStateMachine petStateMachine;
 
+    [Header("Portal effects")]
+    [Tooltip("Glowing portal inside the cave arch.")]
+    [SerializeField] private CavePortal portal;
+    [Tooltip("Small puff of smoke, started when the pet hops out.")]
+    [SerializeField] private ParticleSystem smokePuff;
+
     [Header("Sounds")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip caveAppearSound;
@@ -18,7 +28,9 @@ public class CaveIntro : MonoBehaviour
 
     [Header("Timing and movement (meters, local to LedgeAnchor)")]
     [SerializeField] private float caveGrowSeconds = 0.6f;
-    [SerializeField] private float pauseBeforePetSeconds = 0.4f;
+    [SerializeField] private float pauseBeforePortalSeconds = 0.2f;
+    [Tooltip("How long the open portal glows before the pet comes out.")]
+    [SerializeField] private float portalGlowSeconds = 0.5f;
     [SerializeField] private float petHopOutSeconds = 0.6f;
     [SerializeField] private float petHopHeightMeters = 0.03f;
     [SerializeField] private Vector3 petStartPosition = new Vector3(0f, 0f, 0.015f);
@@ -51,16 +63,25 @@ public class CaveIntro : MonoBehaviour
 
     private IEnumerator PlayIntro()
     {
+        // 1. The cave grows out of the ledge.
         cave.gameObject.SetActive(true);
         cave.localScale = Vector3.zero;
         PlaySound(caveAppearSound);
         yield return ScaleOverTime(cave, Vector3.zero, caveFullScale, caveGrowSeconds);
 
-        yield return new WaitForSeconds(pauseBeforePetSeconds);
+        // 2. The portal opens inside the arch and glows for a moment.
+        yield return new WaitForSeconds(pauseBeforePortalSeconds);
+        yield return portal.Open();
+        yield return new WaitForSeconds(portalGlowSeconds);
 
+        // 3. The pet hops out through the portal.
         pet.gameObject.SetActive(true);
+        smokePuff.Play();
         PlaySound(petHopOutSound);
         yield return HopPetOutOfCave();
+
+        // 4. The portal closes behind the pet.
+        yield return portal.Close();
 
         // The intro is over: let the state machine take over the pet.
         petStateMachine.RequestState(PetState.Wandering);
