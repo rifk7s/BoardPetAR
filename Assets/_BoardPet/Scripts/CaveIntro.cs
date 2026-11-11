@@ -5,6 +5,7 @@ using UnityEngine;
 //   1. the cave grows out of the ledge (rock thud)
 //   2. a glowing portal opens inside the cave arch and glows for a moment
 //   3. the pet hops out through the portal in a puff of smoke
+//      (it starts behind the invisible CaveMask, so it looks like it comes out from behind the cave wall)
 //   4. the portal closes behind it
 // It is hooked to the image target's OnTargetFound event, and it only plays
 // once per app session (losing and finding the marker again does nothing).
@@ -33,8 +34,11 @@ public class CaveIntro : MonoBehaviour
     [SerializeField] private float portalGlowSeconds = 0.5f;
     [SerializeField] private float petHopOutSeconds = 0.6f;
     [SerializeField] private float petHopHeightMeters = 0.03f;
-    [SerializeField] private Vector3 petStartPosition = new Vector3(0f, 0f, 0.015f);
+    [Tooltip("Where the pet starts: just behind the invisible CaveMask, so it is hidden until it moves forward through the cave opening.")]
+    [SerializeField] private Vector3 petStartPosition = new Vector3(0f, 0f, 0.036f);
     [SerializeField] private Vector3 petRestPosition = new Vector3(0f, 0f, -0.04f);
+    [Tooltip("The pet starts at this fraction of its full size and grows while it comes out.")]
+    [SerializeField] private float petStartScaleFraction = 0.4f;
 
     private bool hasPlayedThisSession = false;
     private Vector3 caveFullScale;
@@ -114,7 +118,7 @@ public class CaveIntro : MonoBehaviour
             float hopHeight = Mathf.Sin(progress * Mathf.PI) * petHopHeightMeters;
 
             pet.localPosition = groundPosition + Vector3.up * hopHeight;
-            pet.localScale = Vector3.Lerp(Vector3.zero, petFullScale, progress);
+            pet.localScale = Vector3.Lerp(petFullScale * petStartScaleFraction, petFullScale, progress);
             yield return null;
         }
 
