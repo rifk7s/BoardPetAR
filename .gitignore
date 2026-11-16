@@ -127,3 +127,6 @@ InitTestScene*.unity*
 
 # Vuforia editor runtime cache (device and license derived data), regenerated on Play
 /QCAR/
+
+# Unity Profiler captures
+/ProfilerCaptures/
