@@ -97,6 +97,9 @@ public class PetActions : MonoBehaviour
         animator.CrossFade("Idle", 0.1f);
         petEmote.ShowForSeconds(heartEmote, heartSeconds);
 
+        // A short buzz on the phone when the meal is finished (does nothing in the Editor).
+        Handheld.Vibrate();
+
         actionRoutine = null;
         petStateMachine.RequestState(PetState.Wandering);
     }
