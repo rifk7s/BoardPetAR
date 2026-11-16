@@ -80,6 +80,20 @@ public class CavePortal : MonoBehaviour
         visual.gameObject.SetActive(false);
     }
 
+    // Puts the portal straight back to closed (used when the intro is stopped halfway).
+    public void ResetToClosed()
+    {
+        sparkles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
+
+        openAmount = 0f;
+        visual.localScale = Vector3.zero;
+        visual.gameObject.SetActive(false);
+    }
+
     private void Update()
     {
         if (!visual.gameObject.activeSelf)
